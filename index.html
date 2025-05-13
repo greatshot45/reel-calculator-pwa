@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  <div style="text-align:center; margin-top: 2rem; color:#555;">
-  <strong>💡 Tip:</strong> You can install this app on your device!  
-  <br>Just use the browser’s <em>“Add to Home Screen”</em> or <em>“Install”</em> option.
-</div>
-
 <head>
-  <!-- Add to head -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#007bff" />
-  <link rel="icon" href="icon-192.png" />	
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reel Calculator</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#007bff" />
+  <link rel="icon" href="icon-192.png" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -25,10 +20,24 @@
       padding: 40px;
     }
 
-    h1 {
-      text-align: center;
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 30px;
-      color: #333;
+    }
+
+    header img {
+      width: 48px;
+      height: 48px;
+      margin-right: 12px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #007bff;
+      text-transform: uppercase;
+      margin: 0;
     }
 
     .layout {
@@ -104,6 +113,19 @@
       text-align: center;
     }
 
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .install-tip {
+      text-align: center;
+      margin: 2rem auto;
+      color: #555;
+    }
+
     @media (max-width: 768px) {
       .layout {
         flex-direction: column;
@@ -113,7 +135,15 @@
 </head>
 <body>
 
-  <h1>Reel Calculator</h1>
+  <header>
+    <img src="icon-512.png" alt="App Icon" />
+    <h1>Reel Calculator</h1>
+  </header>
+
+  <div class="install-tip">
+    <strong>💡 Tip:</strong> You can install this app on your device!<br>
+    Just use the browser’s <em>“Add to Home Screen”</em> or <em>“Install”</em> option.
+  </div>
 
   <form class="layout" onsubmit="event.preventDefault(); generateTable();">
     <div class="form">
@@ -131,6 +161,10 @@
 
     <div class="table-container" id="tableOutput"></div>
   </form>
+
+  <footer>
+    Reel Calculator v1.0.0 • PWA Enabled
+  </footer>
 
   <script>
     function generateTable() {
@@ -176,20 +210,14 @@
       tableHTML += `</tbody></table>`;
       document.getElementById('tableOutput').innerHTML = tableHTML;
     }
-  </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log("Service Worker registered"))
-        .catch(err => console.error("Service Worker error:", err));
-   	 });
-  	}
-  </script>
-  
-<footer style="text-align:center; padding: 1rem; font-size: 0.9rem; color: #888;">
-  Reel Calculator v1.0.0 • PWA Enabled
-</footer>
 
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log("Service Worker registered"))
+          .catch(err => console.error("Service Worker error:", err));
+      });
+    }
+  </script>
 </body>
 </html>
