@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Add to head -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#007bff" />
+  <link rel="icon" href="icon-192.png" />	
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reel Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .table-container {
+      flex: 1;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: right;
+    }
+
+    th {
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    td:first-child, th:first-child {
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Reel Calculator</h1>
+
+  <form class="layout" onsubmit="event.preventDefault(); generateTable();">
+    <div class="form">
+      <label for="tracks">Number of Tracks:</label>
+      <input type="number" id="tracks" required />
+
+      <label for="jobQty">Total Job Qty:</label>
+      <input type="number" id="jobQty" required />
+
+      <label for="repeatStep">Repeat Step:</label>
+      <input type="number" id="repeatStep" required />
+
+      <button type="submit">Calculate</button>
+    </div>
+
+    <div class="table-container" id="tableOutput"></div>
+  </form>
+
+  <script>
+    function generateTable() {
+      const tracks = parseInt(document.getElementById('tracks').value);
+      const jobQty = parseInt(document.getElementById('jobQty').value);
+      const repeatStep = parseInt(document.getElementById('repeatStep').value);
+
+      if (isNaN(tracks) || isNaN(jobQty) || isNaN(repeatStep) ||
+          tracks <= 0 || jobQty <= 0 || repeatStep <= 0) {
+        alert("Please enter valid positive numbers.");
+        return;
+      }
+
+      let tableHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Runs</th>
+              <th>Rolls</th>
+              <th>Labels Per Roll</th>
+              <th>Metres</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      for (let runs = 1; runs <= 55; runs++) {
+        let rolls = runs * tracks;
+        let labelsPerRoll = jobQty / rolls;
+        let mm = labelsPerRoll * repeatStep;
+        let metres = Math.round((mm / 1000) + 3);
+
+        tableHTML += `
+          <tr>
+            <td>${runs}</td>
+            <td>${rolls}</td>
+            <td>${labelsPerRoll.toFixed(2)}</td>
+            <td>${metres}</td>
+          </tr>
+        `;
+      }
+
+      tableHTML += `</tbody></table>`;
+      document.getElementById('tableOutput').innerHTML = tableHTML;
+    }
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log("Service Worker registered"))
+        .catch(err => console.error("Service Worker error:", err));
+   	 });
+  	}
+  </script>
+
+</body>
+</html>
